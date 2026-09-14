@@ -3,6 +3,7 @@ import 'dotenv/config';
 
 import healthcheckRoutes from './controllers/healthcheckController';
 import bookRoutes from './controllers/bookController';
+import { getAllBooks } from './repositories/bookRepository';
 
 const port = process.env['PORT'] || 3000;
 

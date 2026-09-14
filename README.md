@@ -6,7 +6,7 @@ This repo contains a starter Express server for use in the Bookish bootcamp exer
 
 ## Developer Setup
 
-1. If you haven't already, install Node.js v16.13.0, NPM and NVM. There are instructions for how to do this on Windows (with and without WSL) [here](https://docs.microsoft.com/en-us/windows/dev-environment/javascript/nodejs-overview).
+1. If you haven't already, install Node.js v26, NPM and NVM. There are instructions for how to do this on Windows (with and without WSL) [here](https://docs.microsoft.com/en-us/windows/dev-environment/javascript/nodejs-overview).
 2. Install [VSCode](https://code.visualstudio.com/download) (or another preferred editor). VSCode is recommended unless you have a strong preference otherwise due to its good compatibility with typescript, excellent community extensions and for consistency across all developers when pairing.
 3. Install the project dependencies with `npm install`.
 4. Run the code!
