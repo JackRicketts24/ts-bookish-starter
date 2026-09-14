@@ -28,7 +28,11 @@ export function getAllBooks(): Promise<Book[]> {
                 const books: Book[] = [];
 
                 const request = new Request(
-                    'SELECT title, authors, ISBN FROM Book',
+                    `SELECT b.title, b.authors, b.isbn AS ISBN, COUNT(c.id) AS copies
+                    FROM Book b
+                    LEFT JOIN Copy c ON c.book_isbn = b.isbn
+                    GROUP BY b.title, b.authors, b.isbn
+                    ORDER BY b.title ASC;`,
                     (err) => {
                         connection.close();
 
@@ -50,6 +54,7 @@ export function getAllBooks(): Promise<Book[]> {
                             values['title'] as string,
                             values['authors'] as string,
                             values['ISBN'] as string,
+                            values['copies'] as number,
                         ),
                     );
                 });
@@ -92,4 +97,31 @@ export function addBook(
             })
             .catch(reject);
     });
+}
+
+
+export function addCopy(isbn: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+        createConnection()
+            .then((connection) => {
+                const request = new Request(
+                    `INSERT INTO Copy (book_isbn)
+                    VALUES (@isbn);`,
+                    (err) => {
+                        connection.close();
+
+                        if (err) {
+                            return reject(err);
+                        }
+                        return resolve();
+                    },
+                );
+
+                request.addParameter('isbn', TYPES.VarChar, isbn);
+
+                connection.execSql(request);
+            })
+            .catch(reject);
+    });
+
 }

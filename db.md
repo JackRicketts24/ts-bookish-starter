@@ -10,23 +10,23 @@ CREATE TABLE Person (
 );
 
 CREATE TABLE Book (
+    isbn VARCHAR(13) PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
-    authors VARCHAR(255) NOT NULL,
-    ISBN VARCHAR(13) PRIMARY KEY
+    authors VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE Copy (
-    id INTEGER PRIMARY KEY,
-    book_id INTEGER NOT NULL,
-    FOREIGN KEY (book_id) REFERENCES Book(id)
+    id INTEGER IDENTITY(1,1) PRIMARY KEY,
+    book_isbn VARCHAR(13) NOT NULL,
+    FOREIGN KEY (book_isbn) REFERENCES Book(isbn)
 );
 
 CREATE TABLE Loan (
-    id IDENTITY(1,1) INTEGER PRIMARY KEY,
+    id INTEGER IDENTITY(1,1) PRIMARY KEY,
     copy_id INTEGER NOT NULL,
     user_id INTEGER NOT NULL,
     due DATE NOT NULL,
-    FOREIGN KEY (book_id) REFERENCES Copy(id),
+    FOREIGN KEY (copy_id) REFERENCES Copy(id),
     FOREIGN KEY (user_id) REFERENCES Person(id)
 );
 ```

@@ -3,6 +3,7 @@ import {
     getAllBooks,
     addBook,
     DuplicateIsbnError,
+    addCopy
 } from '../repositories/bookRepository';
 
 class BookController {
@@ -28,9 +29,12 @@ class BookController {
         const title = req.body.title;
         const authors = req.body.authors;
         const isbn = req.body.isbn;
+        const copyCount = req.body.copies;
 
         try {
             await addBook(title, authors, isbn);
+            for (let i = 0; i < copyCount; i++)
+                await addCopy(isbn);
             return res.status(200).send();
         } catch (error) {
             if (error instanceof DuplicateIsbnError) {

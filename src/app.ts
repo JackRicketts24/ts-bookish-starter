@@ -3,7 +3,7 @@ import 'dotenv/config';
 
 import healthcheckRoutes from './controllers/healthcheckController';
 import bookRoutes from './controllers/bookController';
-import { getAllBooks } from './repositories/bookRepository';
+import loanRoutes from './controllers/loanController';
 
 const port = process.env['PORT'] || 3000;
 
@@ -18,3 +18,4 @@ app.listen(port, () => {
  */
 app.use('/healthcheck', healthcheckRoutes);
 app.use('/books', bookRoutes);
+app.use('/loans', loanRoutes);
