@@ -3,7 +3,8 @@ import {
     getAllBooks,
     addBook,
     DuplicateIsbnError,
-    addCopy
+    addCopy,
+    findBook
 } from '../repositories/bookRepository';
 
 class BookController {
@@ -13,6 +14,7 @@ class BookController {
         this.router = Router();
 
         this.router.get('/all', this.allBooks.bind(this));
+        this.router.get('/search', this.findBook.bind(this));
         this.router.get('/:id', this.getBook.bind(this));
         this.router.post('/', this.createBook.bind(this));
     }
@@ -61,6 +63,20 @@ class BookController {
             return res.status(500).json({
                 error: "Unable to connect to database"
             })
+        }
+    }
+
+    async findBook(req: Request, res: Response) {
+        const title = req.query.title as string;
+        try {
+            return res.status(200).json({
+                books: await findBook(title)
+            });
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({
+                error: "Unable to connect to database"
+            });
         }
     }
 }
