@@ -5,7 +5,7 @@ import healthcheckRoutes from './controllers/healthcheckController';
 import bookRoutes from './controllers/bookController';
 import loanRoutes from './controllers/loanController';
 
-const port = process.env['PORT'] || 3000;
+const port = process.env['PORT'] || 3001;
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));

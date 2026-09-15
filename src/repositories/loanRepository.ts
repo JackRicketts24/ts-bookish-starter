@@ -56,3 +56,33 @@ export function makeLoan(personId: number, copyId: number, due: Date): Promise<v
             .catch(reject);
     })
 }
+
+export function getCopyID(isbn: string): Promise<number> {
+    return new Promise((resolve, reject) => {
+        createConnection()
+            .then((connection) => {
+                let copyId: number = -1;
+                const request = new Request(
+                    `SELECT TOP 1 c.id AS copyId
+                    FROM Copy c
+                    WHERE c.book_isbn = @isbn
+                    AND c.id NOT IN (SELECT l.copy_id FROM Loan l);`,
+                    (err) => {
+                        connection.close();
+                        if (err) {
+                            return reject(err);
+                        }
+                        return resolve(copyId);
+                    }
+                );
+
+                request.on('row', (columns) => {
+                    copyId = columns[0].value;
+                });
+
+                request.addParameter('isbn', TYPES.VarChar, isbn);
+                connection.execSql(request);
+            })
+            .catch(reject);
+    });
+}
