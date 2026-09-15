@@ -22,6 +22,15 @@ export function getLoans(personId: number): Promise<Loan[]> {
                     }
                 );
 
+                request.on('row', (columns) => {
+                    loans.push(new Loan(
+                        columns[0].value,
+                        columns[1].value,
+                        columns[2].value,
+                        columns[3].value
+                    ));
+                });
+
                 request.addParameter('personId', TYPES.Int, personId);
 
                 connection.execSql(request);
