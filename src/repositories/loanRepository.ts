@@ -13,7 +13,7 @@ export async function getLoans(personId: number): Promise<Loan[]> {
 
     return loans.map((loan) => {
         const copy = loan.get('Copy') as CopyModel & { Book: BookModel };
-        return new Loan(loan.userId, copy.Book.isbn, copy.Book.title, new Date(loan.due));
+        return new Loan(loan.id, loan.userId, copy.Book.isbn, copy.Book.title, new Date(loan.due));
     });
 }
 
@@ -24,6 +24,10 @@ export async function makeLoan(personId: number, copyId: number, due: Date): Pro
         userId: personId,
         due,
     });
+}
+
+export async function removeLoan(id: number): Promise<void> {
+    await LoanModel.destroy({ where: { id }});
 }
 
 export async function getCopyID(isbn: string): Promise<number> {
