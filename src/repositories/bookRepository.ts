@@ -77,3 +77,18 @@ export async function findBook(title: string): Promise<BookWithCopies[]> {
 
     return toBooks(books);
 }
+
+export async function getBookByISBN(isbn: string): Promise<BookWithCopies | null> {
+    const books = await BookModel.findAll({
+        attributes: {
+            include: [[sequelize.fn('COUNT', sequelize.col('Copies.id')), 'copies']],
+        },
+        include: [{model: CopyModel, attributes: []}],
+        where: { isbn },
+        group: ['Book.isbn', 'Book.title', 'Book.authors'],
+        subQuery: false,
+    });
+    if (books)
+        return toBooks(books)[0];
+    return null;
+}

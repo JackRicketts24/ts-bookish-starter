@@ -8,7 +8,6 @@ export default class Loan {
         this.personID = personID;
         this.bookISBN = bookISBN;
         this.bookTitle = bookTitle;
-        // this.due = new Date(dateString);
         this.due = date
     }
 }

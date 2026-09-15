@@ -4,7 +4,8 @@ import {
     addBook,
     DuplicateIsbnError,
     addCopy,
-    findBook
+    findBook,
+    getBookByISBN
 } from '../repositories/bookRepository';
 
 class BookController {
@@ -15,15 +16,26 @@ class BookController {
 
         this.router.get('/all', this.allBooks.bind(this));
         this.router.get('/search', this.findBook.bind(this));
-        this.router.get('/:id', this.getBook.bind(this));
+        this.router.get('/:isbn', this.getBook.bind(this));
         this.router.post('/', this.createBook.bind(this));
     }
 
-    getBook(req: Request, res: Response) {
-        // TODO: implement functionality
-        return res.status(500).json({
-            error: 'server_error',
-            error_description: 'Endpoint not implemented yet.',
+    async getBook(req: Request, res: Response) {
+        const isbn = req.params.isbn;
+
+        try {
+            const book = await getBookByISBN(isbn);
+            if (book) {
+                return res.status(200).json({
+                    book
+                });
+            }
+        } catch (error) {
+            console.error(error);
+        }
+
+        return res.status(404).json({
+            error: "Book not found."
         });
     }
 
