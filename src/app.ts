@@ -1,6 +1,7 @@
 import express from 'express';
 import 'dotenv/config';
 
+import passport, { authenticate } from './middleware/authenticate';
 import healthcheckRoutes from './controllers/healthcheckController';
 import bookRoutes from './controllers/bookController';
 import loanRoutes from './controllers/loanController';
@@ -10,6 +11,8 @@ const port = process.env['PORT'] || 3001;
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(passport.initialize());
 app.listen(port, () => {
     return console.log(`Express is listening at http://localhost:${port}`);
 });
@@ -19,5 +22,5 @@ app.listen(port, () => {
  */
 app.use('/healthcheck', healthcheckRoutes);
 app.use('/books', bookRoutes);
-app.use('/loans', loanRoutes);
+app.use('/loans', authenticate, loanRoutes);
 app.use('/auth', personRoutes);

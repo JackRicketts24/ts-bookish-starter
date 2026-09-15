@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { getCopyID, getLoans, makeLoan } from '../repositories/loanRepository';
+import Person from '../models/person';
 
 class LoanController {
     router: Router;
@@ -12,7 +13,7 @@ class LoanController {
     }
 
     async getLoans(req: Request, res: Response) {
-        const personID = req.body.personID;
+        const personID = (req.user as Person).personID;
         try {
             return res.status(200).json({
                 loans: await getLoans(personID)
@@ -26,7 +27,7 @@ class LoanController {
     }
 
     async borrow(req: Request, res: Response) {
-        const personID = req.body.personID;
+        const personID = (req.user as Person).personID;
         const bookISBN = req.body.isbn;
         const dueDate = req.body.due;
 
