@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { getCopyID, getLoans, makeLoan } from '../repositories/loanRepository';
+import { getCopyID, getLoans, makeLoan, removeLoan } from '../repositories/loanRepository';
 import { PersonModel } from '../models/personModel';
 
 class LoanController {
@@ -10,6 +10,7 @@ class LoanController {
 
         this.router.get('/', this.getLoans.bind(this));
         this.router.post('/borrow', this.borrow.bind(this));
+        this.router.post('/return', this.returnLoan.bind(this));
     }
 
     async getLoans(req: Request, res: Response) {
@@ -46,6 +47,21 @@ class LoanController {
             console.error(error);
             return res.status(500).json({
                 error: "Unable to connect to database"
+            });
+        }
+    }
+
+    async returnLoan(req: Request, res: Response) {
+        const loanID = req.body.loanId;
+        try {
+            await removeLoan(loanID);
+            return res.status(200).json({
+                msg: "Book returned."
+            });
+        } catch (error) {
+            console.error(error);
+            return res.status(400).json({
+                error: "Invalid loan ID provided."
             });
         }
     }
