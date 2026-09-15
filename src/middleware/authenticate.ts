@@ -8,7 +8,7 @@ import {
 import { getPersonById } from '../repositories/personRepository';
 
 interface JwtPayload {
-    personID: number;
+    id: number;
 }
 
 const options: StrategyOptions = {
@@ -18,7 +18,7 @@ const options: StrategyOptions = {
 
 passport.use(
     new JwtStrategy(options, (payload: JwtPayload, done) => {
-        getPersonById(payload.personID)
+        getPersonById(payload.id)
             .then((person) => {
                 if (!person) {
                     return done(null, false);

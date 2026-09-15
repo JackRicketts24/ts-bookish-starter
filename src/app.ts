@@ -2,6 +2,7 @@ import express from 'express';
 import 'dotenv/config';
 
 import passport, { authenticate } from './middleware/authenticate';
+import { sequelize } from './db/sequelize';
 import healthcheckRoutes from './controllers/healthcheckController';
 import bookRoutes from './controllers/bookController';
 import loanRoutes from './controllers/loanController';
@@ -16,6 +17,10 @@ app.use(passport.initialize());
 app.listen(port, () => {
     return console.log(`Express is listening at http://localhost:${port}`);
 });
+
+sequelize.authenticate()
+    .then(() => console.log('Sequelize connected to the database.'))
+    .catch((err) => console.error('Sequelize failed to connect to the database:', err));
 
 /**
  * Primary app routes.

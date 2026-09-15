@@ -4,16 +4,16 @@ import jwt from 'jsonwebtoken';
 
 import { createPerson, getPersonsByName } from '../repositories/personRepository';
 import { authenticate } from '../middleware/authenticate';
-import Person from '../models/person';
+import { PersonModel } from '../models/personModel';
 
 const SALT_ROUNDS = 10;
 
-function signToken(person: Person): string {
+function signToken(person: PersonModel): string {
     const options: jwt.SignOptions = {
         expiresIn: (process.env['JWT_EXPIRY'] ||
             '1h') as jwt.SignOptions['expiresIn'],
     };
-    return jwt.sign({ personID: person.personID }, process.env['JWT_SECRET'] || '', options);
+    return jwt.sign({ id: person.id }, process.env['JWT_SECRET'] || '', options);
 }
 
 class PersonController {
@@ -84,9 +84,9 @@ class PersonController {
     }
 
     async validate(req: Request, res: Response) {
-        const person = req.user as Person;
+        const person = req.user as PersonModel;
         return res.status(200).json({
-            personID: person.personID,
+            id: person.id,
             name: person.name,
         });
     }
