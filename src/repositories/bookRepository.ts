@@ -1,7 +1,6 @@
 import { UniqueConstraintError } from 'sequelize';
 
 import { sequelize } from '../db/sequelize';
-import Book from '../models/book';
 import { BookModel } from '../models/bookModel';
 import { CopyModel } from '../models/copyModel';
 import '../models/associations';
@@ -13,19 +12,25 @@ export class DuplicateIsbnError extends Error {
     }
 }
 
-function toBooks(books: BookModel[]): Book[] {
+interface BookWithCopies {
+    title: string;
+    authors: string;
+    isbn: string;
+    copies: number;
+}
+
+function toBooks(books: BookModel[]): BookWithCopies[] {
     return books.map(
-        (book) =>
-            new Book(
-                book.title,
-                book.authors,
-                book.isbn,
-                Number(book.get('copies')),
-            )
+        (book) => ({
+            title: book.title,
+            authors: book.authors,
+            isbn: book.isbn,
+            copies: Number(book.get('copies')),
+        })
     );
 }
 
-export async function getAllBooks(): Promise<Book[]> {
+export async function getAllBooks(): Promise<BookWithCopies[]> {
     const books = await BookModel.findAll({
         attributes: {
             include: [[sequelize.fn('COUNT', sequelize.col('Copies.id')), 'copies']],
@@ -58,7 +63,7 @@ export async function addCopy(isbn: string): Promise<void> {
     await CopyModel.create({ bookIsbn: isbn });
 }
 
-export async function findBook(title: string): Promise<Book[]> {
+export async function findBook(title: string): Promise<BookWithCopies[]> {
     const books = await BookModel.findAll({
         attributes: {
             include: [[sequelize.fn('COUNT', sequelize.col('Copies.id')), 'copies']],

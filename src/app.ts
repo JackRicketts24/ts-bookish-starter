@@ -18,8 +18,7 @@ app.listen(port, () => {
     return console.log(`Express is listening at http://localhost:${port}`);
 });
 
-sequelize
-    .authenticate()
+sequelize.authenticate()
     .then(() => console.log('Sequelize connected to the database.'))
     .catch((err) => console.error('Sequelize failed to connect to the database:', err));
 
