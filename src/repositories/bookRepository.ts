@@ -21,7 +21,7 @@ function toBooks(books: BookModel[]): Book[] {
                 book.authors,
                 book.isbn,
                 Number(book.get('copies')),
-            ),
+            )
     );
 }
 
